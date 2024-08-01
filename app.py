@@ -10,10 +10,41 @@ def display_logo():
     logo_path = "logo-cass.svg"  # Asegúrate de que el archivo esté en el mismo directorio o ajusta la ruta
     with open(logo_path, "r") as f:
         svg_logo = f.read()
-    st.markdown(f'<div style="display:flex; align-items:center;"><img src="data:image/svg+xml;base64,{base64.b64encode(svg_logo.encode()).decode()}" style="height: 50px; margin-right: 10px;"> <h1 style="display:inline;">Visión Inteligente para la Interpretación de Recetas Médicas</h1></div>', unsafe_allow_html=True)
+    st.markdown(f'''
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img src="data:image/svg+xml;base64,{base64.b64encode(svg_logo.encode()).decode()}" style="height: 50px; margin-right: 20px;">
+            <h1 style="display: inline; color: #4A90E2; font-family: 'Arial', sans-serif;">Visión Inteligente para la Interpretación de Recetas Médicas</h1>
+        </div>
+    ''', unsafe_allow_html=True)
 
 # Mostrar el logo en la cabecera
 display_logo()
+
+st.markdown("""
+    <style>
+        .main {
+            background-color: #f0f2f6;
+            font-family: 'Arial', sans-serif;
+        }
+        .stButton>button {
+            background-color: #4A90E2;
+            color: white;
+            border-radius: 5px;
+        }
+        .stButton>button:hover {
+            background-color: #357ABD;
+            color: white;
+        }
+        .stFileUploader>div>div {
+            border: 2px dashed #4A90E2;
+        }
+        .stAlert {
+            background-color: #F4F4F4;
+            border-radius: 5px;
+            padding: 20px;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 st.write("Sube una o varias imágenes de tus recetas médicas y nuestro sistema las interpretará y describirá para ti.")
 
@@ -61,6 +92,11 @@ if api_key and tavily_api_key:
                 # Mostrar la imagen subida
                 st.image(uploaded_file, caption='Imagen subida.', use_column_width=True)
                 st.write("Analizando...")
+
+                # Añadir barra de progreso
+                progress_bar = st.progress(0)
+                for i in range(100):
+                    progress_bar.progress(i + 1)
 
                 # Obtener la descripción de la imagen
                 description = get_image_description(client, uploaded_file, prompt)
