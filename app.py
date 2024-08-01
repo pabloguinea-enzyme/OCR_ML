@@ -10,7 +10,7 @@ def display_logo():
     logo_path = "logo-cass.svg"  # Asegúrate de que el archivo esté en el mismo directorio o ajusta la ruta
     with open(logo_path, "r") as f:
         svg_logo = f.read()
-    st.markdown(f'<div style="display:flex; align-items:center;"><img src="data:image/svg+xml;base64,{base64.b64encode(svg_logo.encode()).decode()}" style="height: 50px; margin-right: 10px;"> <h1 style="display:inline;">Smart Vision para la Interpretación de Recetas Médicas</h1></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="display:flex; align-items:center;"><img src="data:image/svg+xml;base64,{base64.b64encode(svg_logo.encode()).decode()}" style="height: 50px; margin-right: 10px;"> <h1 style="display:inline;">Smart Vision per a la Interpretació de Receptes Mèdiques</h1></div>', unsafe_allow_html=True)
 
 # Mostrar el logo en la cabecera
 display_logo()
