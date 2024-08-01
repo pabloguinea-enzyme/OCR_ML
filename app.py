@@ -66,7 +66,8 @@ if api_key and tavily_api_key:
                 # Obtener la descripción de la imagen
                 try:
                     description = get_image_description(client, uploaded_file, prompt)
-                    st.write("Descripción obtenida de la imagen.")
+                    st.write("Descripción obtenida de la imagen:")
+                    st.code(description)  # Mostrar la descripción obtenida para depuración
                 except Exception as e:
                     st.error(f"Error al obtener la descripción de la imagen: {e}")
                     continue
