@@ -53,7 +53,7 @@ if api_key and tavily_api_key:
     """
 
     # Botón para subir imágenes
-    uploaded_files = st.file_uploader("Elige una o más imágenes...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
     if uploaded_files:
         try:
