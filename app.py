@@ -47,7 +47,7 @@ if api_key and tavily_api_key:
     Por favor, analiza la imagen de la receta médica y proporciona la siguiente información para cada medicamento listado:
     - Nombre del medicamento
     - Dosis del medicamento
-    - Posología
+    - Posología (indicaciones de uso)
 
     Si algún dato no está presente en la receta, indica "No especificado".
     """
@@ -64,7 +64,7 @@ if api_key and tavily_api_key:
 
                 # Obtener la descripción de la imagen
                 description = get_image_description(client, uploaded_file, prompt)
-                
+
                 # Procesar la descripción para extraer la información de los medicamentos
                 description_lines = description.split('\n')
                 medications_info = []
@@ -80,7 +80,7 @@ if api_key and tavily_api_key:
                         medication["Posología"] = line.split(":", 1)[1].strip()
                 if medication:
                     medications_info.append(medication)
-                
+
                 # Verificar y corregir los nombres de los medicamentos
                 for med in medications_info:
                     medication_name = med.get("Nombre", "No especificado")
@@ -91,7 +91,7 @@ if api_key and tavily_api_key:
                         st.success(f"Nombre del medicamento: {medication_name} (válido)")
                     st.write("Dosis del medicamento:", med.get("Dosis", "No especificado"))
                     st.write("Posología:", med.get("Posología", "No especificado"))
-                
+
         except Exception as e:
             st.error(f"Error: {e}")
 else:
