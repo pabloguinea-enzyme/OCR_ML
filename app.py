@@ -4,36 +4,36 @@ from openai import OpenAI
 import base64
 from utils import get_image_description
 
-# Streamlit app layout
-st.title("Image Description using GPT-4o")
-st.write("Upload an image and get a description using GPT-4o.")
+# Configuración de la app de Streamlit
+st.title("Visión Inteligente para la Interpretación de Recetas Médicas")
+st.write("Sube una o varias imágenes de tus recetas médicas y nuestro sistema las interpretará y describirá para ti.")
 
-# Textbox for updating OpenAI API key
-api_key = st.text_input("Enter your OpenAI API key", type="password")
+# Obtener la clave de la API de OpenAI
+api_key = st.secrets.get("openai_api_key")
 if not api_key:
     api_key = os.environ.get("OPENAI_API_KEY", "")
 
 if api_key:
-    # Initialize the OpenAI client
+    # Inicializar el cliente de OpenAI
     client = OpenAI(api_key=api_key)
 
-    # Textbox for updating the prompt
-    prompt = st.text_input("Enter the prompt for image description", "What’s in this image?")
+    # Caja de texto para actualizar el prompt
+    prompt = st.text_input("Introduce el prompt para la descripción de la imagen", "¿Qué hay en esta imagen?")
 
-    # Upload image button
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    # Botón para subir imágenes
+    uploaded_files = st.file_uploader("Elige una o más imágenes...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
-    if uploaded_file is not None:
+    if uploaded_files:
         try:
-            # Display the uploaded image
-            st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-            st.write("")
-            st.write("Classifying...")
+            for uploaded_file in uploaded_files:
+                # Mostrar la imagen subida
+                st.image(uploaded_file, caption='Imagen subida.', use_column_width=True)
+                st.write("Analizando...")
 
-            # Get the image description
-            description = get_image_description(client, uploaded_file, prompt)
-            st.write(description)
+                # Obtener la descripción de la imagen
+                description = get_image_description(client, uploaded_file, prompt)
+                st.write(description)
         except Exception as e:
             st.error(f"Error: {e}")
 else:
-    st.error("Please provide a valid OpenAI API key.")
+    st.error("Por favor, proporciona una clave de API válida de OpenAI.")
