@@ -20,10 +20,10 @@ if api_key:
     # Prompt predefinido para la descripción de la imagen
     prompt = """
     Por favor, analiza la imagen de la receta médica y proporciona la siguiente información de manera clara y estructurada:
-    1. Nombre del medicamento.
-    2. Dosis del medicamento.
-    3. Fecha de prescripción, si aparece en la receta.
-
+    1. Nombre del medicamento:
+    2. Dosis del medicamento:
+    3. Fecha de prescripción:
+    
     Si algún dato no está presente en la receta, indica "No especificado".
     """
 
@@ -39,7 +39,7 @@ if api_key:
 
                 # Obtener la descripción de la imagen
                 description = get_image_description(client, uploaded_file, prompt)
-                st.write(description)
+                st.write(description.strip())
         except Exception as e:
             st.error(f"Error: {e}")
 else:
