@@ -19,10 +19,10 @@ if api_key:
 
     # Prompt predefinido para la descripción de la imagen
     prompt = """
-    Por favor, analiza la imagen de la receta médica y proporciona la siguiente información de manera clara y estructurada:
-    1. Nombre del medicamento:
-    2. Dosis del medicamento:
-    3. Fecha de prescripción:
+    Por favor, proporciona solo la siguiente información de manera clara y estructurada:
+    Nombre del medicamento:
+    Dosis del medicamento:
+    Fecha de prescripción:
     
     Si algún dato no está presente en la receta, indica "No especificado".
     """
