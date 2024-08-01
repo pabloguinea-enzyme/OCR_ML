@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from openai import OpenAI
-import base64
+import requests
 from utils import get_image_description
 
 # Configuración de la app de Streamlit
@@ -10,10 +10,26 @@ st.write("Sube una o varias imágenes de tus recetas médicas y nuestro sistema 
 
 # Obtener la clave de la API de OpenAI
 api_key = st.secrets.get("openai_api_key")
+tavily_api_key = st.secrets.get("tavily_api_key")  # Añade tu clave de API de Tavily a tus secretos de Streamlit
+
 if not api_key:
     api_key = os.environ.get("OPENAI_API_KEY", "")
+if not tavily_api_key:
+    tavily_api_key = os.environ.get("TAVILY_API_KEY", "")
 
-if api_key:
+def get_corrected_medication_name(name):
+    url = f"https://api.tavily.com/medication-correction"
+    headers = {
+        "Authorization": f"Bearer {tavily_api_key}",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, json={"name": name}, headers=headers)
+    if response.status_code == 200:
+        return response.json().get("corrected_name", name)
+    else:
+        return name
+
+if api_key and tavily_api_key:
     # Inicializar el cliente de OpenAI
     client = OpenAI(api_key=api_key)
 
@@ -39,8 +55,23 @@ if api_key:
 
                 # Obtener la descripción de la imagen
                 description = get_image_description(client, uploaded_file, prompt)
-                st.write(description.strip())
+                
+                # Procesar la descripción para extraer el nombre del medicamento
+                description_lines = description.split('\n')
+                medication_info = {line.split(':')[0].strip(): line.split(':')[1].strip() for line in description_lines if ':' in line}
+                
+                # Verificar y corregir el nombre del medicamento
+                medication_name = medication_info.get("Nombre del medicamento", "No especificado")
+                corrected_name = get_corrected_medication_name(medication_name)
+                if medication_name != corrected_name:
+                    st.warning(f"Nombre del medicamento corregido: {corrected_name} (original: {medication_name})")
+                else:
+                    st.success(f"Nombre del medicamento: {medication_name} (válido)")
+
+                # Mostrar la información restante
+                st.write("Dosis del medicamento:", medication_info.get("Dosis del medicamento", "No especificado"))
+                st.write("Fecha de prescripción:", medication_info.get("Fecha de prescripción", "No especificado"))
         except Exception as e:
             st.error(f"Error: {e}")
 else:
-    st.error("Por favor, proporciona una clave de API válida de OpenAI.")
+    st.error("Por favor, proporciona una clave de API válida de OpenAI y Tavily.")
