@@ -35,6 +35,9 @@ def get_corrected_medication_name(name):
     response = requests.post(url, json={"name": name}, headers=headers)
     if response.status_code == 200:
         return response.json().get("corrected_name", name)
+    elif response.status_code == 404:
+        st.warning(f"Nombre del medicamento no encontrado: {name}")
+        return name
     else:
         st.error(f"Error en la corrección del nombre del medicamento: {response.status_code}")
         return name
@@ -97,8 +100,8 @@ if api_key and tavily_api_key:
                             st.warning(f"Nombre del medicamento corregido: {corrected_name} (original: {medication_name})")
                         else:
                             st.success(f"Nombre del medicamento: {medication_name} (válido)")
-                        st.write("Dosis del medicamento:", med.get("Dosis", "No especificado"))
-                        st.write("Posología:", med.get("Posología", "No especificado"))
+                        st.write(f"**Dosis del medicamento:** {med.get('Dosis', 'No especificado')}")
+                        st.write(f"**Posología:** {med.get('Posología', 'No especificado')}")
                 
                 except Exception as e:
                     st.error(f"Error al procesar la descripción de la imagen: {e}")
