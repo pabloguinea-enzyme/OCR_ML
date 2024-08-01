@@ -15,7 +15,7 @@ def display_logo():
 # Mostrar el logo en la cabecera
 display_logo()
 
-st.write("Sube una o varias imágenes de tus recetas médicas y nuestro sistema las interpretará y describirá para ti.")
+st.write("Puja una o diverses imatges de les teves receptes mèdiques perquè el sistema les analitzi i interpreti.")
 
 # Obtener la clave de la API de OpenAI
 api_key = st.secrets.get("openai_api_key")
