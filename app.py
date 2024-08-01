@@ -4,8 +4,16 @@ from openai import OpenAI
 import requests
 from utils import get_image_description
 
-# Configuración de la app de Streamlit
-st.title("Visión Inteligente para la Interpretación de Recetas Médicas")
+# Función para mostrar el logo en la cabecera
+def display_logo():
+    logo_path = "logo-cass.svg"  # Asegúrate de que el archivo esté en el mismo directorio o ajusta la ruta
+    with open(logo_path, "r") as f:
+        svg_logo = f.read()
+    st.markdown(f'<div style="display:flex; align-items:center;"><img src="data:image/svg+xml;base64,{base64.b64encode(svg_logo.encode()).decode()}" style="height: 50px; margin-right: 10px;"> <h1 style="display:inline;">Visión Inteligente para la Interpretación de Recetas Médicas</h1></div>', unsafe_allow_html=True)
+
+# Mostrar el logo en la cabecera
+display_logo()
+
 st.write("Sube una o varias imágenes de tus recetas médicas y nuestro sistema las interpretará y describirá para ti.")
 
 # Obtener la clave de la API de OpenAI
