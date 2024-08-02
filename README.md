@@ -1,19 +1,20 @@
-# Image Description using GPT-4o
+# Visión Inteligente para la Interpretación de Recetas Médicas
 
-This project is a Streamlit web application that uses OpenAI's GPT-4o to generate descriptions for uploaded images.
+Este proyecto es una aplicación web desarrollada con Streamlit para analizar y describir imágenes de recetas médicas, proporcionando una interpretación clara y estructurada de los medicamentos, dosis y posología presentes en las recetas.
 
 ## Features
 
-- Upload an image (jpg, jpeg, png).
-- Get a description of the image using GPT-4o.
-- User-friendly interface.
+- Subir una o varias imágenes (jpg, jpeg, png).
+- Obtener una descripción detallada de los medicamentos, dosis y posología.
+- Verificación y corrección de nombres de medicamentos utilizando la API de Tavily.
+- Interfaz amigable e intuitiva
 
 ## Setup
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/OrenGrinker/gpt4oimage.git
-    cd gpt4oimage
+    git clone https://github.com/OrenGrinker/OCR-ML.git
+    cd OCR-ML
     ```
 
 2. Install the required packages:
@@ -26,7 +27,7 @@ This project is a Streamlit web application that uses OpenAI's GPT-4o to generat
     streamlit run app.py
     ```
 
-4. Open your browser and go to `http://localhost:8501` to use the app.
+4. Open your browser and go to `http://localhost:8501` to use the app OR go to https://cass-demo.streamlit.app/
 
 ## Usage
 
