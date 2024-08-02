@@ -36,6 +36,7 @@ def get_corrected_medication_name(name):
     if response.status_code == 200:
         return response.json().get("corrected_name", name)
     else:
+        st.error(f"Error en la corrección del nombre del medicamento: {response.status_code}")
         return name
 
 if api_key and tavily_api_key:
@@ -47,7 +48,7 @@ if api_key and tavily_api_key:
     Por favor, analiza la imagen de la receta médica y proporciona la siguiente información para cada medicamento listado:
     - Nombre del medicamento
     - Dosis del medicamento
-    - Posología
+    - Posología (indicaciones de uso)
 
     Si algún dato no está presente en la receta, indica "No especificado".
     """
@@ -63,36 +64,45 @@ if api_key and tavily_api_key:
                 st.write("Analizando...")
 
                 # Obtener la descripción de la imagen
-                description = get_image_description(client, uploaded_file, prompt)
+                try:
+                    description = get_image_description(client, uploaded_file, prompt)
+                    st.write("Descripción obtenida de la imagen.")
+                except Exception as e:
+                    st.error(f"Error al obtener la descripción de la imagen: {e}")
+                    continue
                 
                 # Procesar la descripción para extraer la información de los medicamentos
-                description_lines = description.split('\n')
-                medications_info = []
-                medication = {}
-                for line in description_lines:
-                    if "Nombre del medicamento:" in line:
-                        if medication:
-                            medications_info.append(medication)
-                        medication = {"Nombre": line.split(":", 1)[1].strip()}
-                    elif "Dosis del medicamento:" in line:
-                        medication["Dosis"] = line.split(":", 1)[1].strip()
-                    elif "Posología:" in line:
-                        medication["Posología"] = line.split(":", 1)[1].strip()
-                if medication:
-                    medications_info.append(medication)
+                try:
+                    description_lines = description.split('\n')
+                    medications_info = []
+                    medication = {}
+                    for line in description_lines:
+                        if "Nombre del medicamento:" in line:
+                            if medication:
+                                medications_info.append(medication)
+                            medication = {"Nombre": line.split(":", 1)[1].strip()}
+                        elif "Dosis del medicamento:" in line:
+                            medication["Dosis"] = line.split(":", 1)[1].strip()
+                        elif "Posología:" in line:
+                            medication["Posología"] = line.split(":", 1)[1].strip()
+                    if medication:
+                        medications_info.append(medication)
+
+                    # Verificar y corregir los nombres de los medicamentos
+                    for med in medications_info:
+                        medication_name = med.get("Nombre", "No especificado")
+                        corrected_name = get_corrected_medication_name(medication_name)
+                        if medication_name != corrected_name:
+                            st.warning(f"Nombre del medicamento corregido: {corrected_name} (original: {medication_name})")
+                        else:
+                            st.success(f"Nombre del medicamento: {medication_name} (válido)")
+                        st.write("Dosis del medicamento:", med.get("Dosis", "No especificado"))
+                        st.write("Posología:", med.get("Posología", "No especificado"))
                 
-                # Verificar y corregir los nombres de los medicamentos
-                for med in medications_info:
-                    medication_name = med.get("Nombre", "No especificado")
-                    corrected_name = get_corrected_medication_name(medication_name)
-                    if medication_name != corrected_name:
-                        st.warning(f"Nombre del medicamento corregido: {corrected_name} (original: {medication_name})")
-                    else:
-                        st.success(f"Nombre del medicamento: {medication_name} (válido)")
-                    st.write("Dosis del medicamento:", med.get("Dosis", "No especificado"))
-                    st.write("Posología:", med.get("Posología", "No especificado"))
-                
+                except Exception as e:
+                    st.error(f"Error al procesar la descripción de la imagen: {e}")
+
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"Error general: {e}")
 else:
     st.error("Por favor, proporciona una clave de API válida de OpenAI y Tavily.")
