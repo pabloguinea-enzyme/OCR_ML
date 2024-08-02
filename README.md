@@ -13,7 +13,7 @@ Este proyecto es una aplicación web desarrollada con Streamlit para analizar y 
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/OrenGrinker/OCR-ML.git
+    git clone https://github.com/pabloguinea-enzyme/OCR_ML.git
     cd OCR-ML
     ```
 
